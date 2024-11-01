@@ -6,8 +6,8 @@ from google.oauth2 import service_account
 
 from datetime import datetime
 
-import json
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -39,11 +39,11 @@ class BackstoryClient:
             self.base_url = f"https://{region_prefix}-{self.BACKSTORY_API_BASE}"
 
         self.credentials = service_account.Credentials.from_service_account_file(sa_file_path, scopes=self.SCOPES)
+        self.http_session = requests.AuthorizedSession(self.credentials)
 
     def create_data_export(self, request: CreateDataExportRequest) -> dict:
-        http_session = requests.AuthorizedSession(self.credentials)
         url = f"{self.base_url}/v1/tools/dataexport"
-        resp = http_session.request("POST", url, json=request.toJson())
+        resp = self.http_session.request("POST", url, json=request.toJson())
         # check status
         if not(resp.status_code >= 200 and resp.status_code <= 299):
             msg = f"received status code {resp.status_code} from backstory api"
@@ -51,7 +51,6 @@ class BackstoryClient:
             raise Exception(msg)
 
         o = resp.json()
-        logger.info(f"received {o}")
 
         if o.get("dataExportId") is None:
             msg = f"dataExportId does not exist"
@@ -66,5 +65,17 @@ class BackstoryClient:
         return o
 
     def get_data_export(self, id) -> str:
-        url = "{}/v1/tools/dataexport".format(self.base_url)
-        return "not-implemented"
+        url = f"{self.base_url}/v1/tools/dataexport/{id}"
+        resp = self.http_session.request("GET", url)
+
+        if not(resp.status_code >= 200 and resp.status_code <= 299):
+            msg = f"received status code {resp.status_code} from backstory api"
+            logger.error(msg)
+            raise Exception(msg)
+
+        o = resp.json()
+
+        if o.get("dataExportStatus") and o["dataExportStatus"].get("stage"):
+            return o["dataExportStatus"].get("stage")
+
+        return "UNKNOWN"

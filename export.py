@@ -18,8 +18,7 @@ logger = logging.getLogger(__name__)
 
 class ExportService:
     def __init__(self):
-        #self.client = BackstoryClient(region_prefix="eu", sa_file_path=SA_FILE)
-        self.client = BackstoryClientDummy()
+        self.client = BackstoryClient(region_prefix="eu", sa_file_path=SA_FILE)
         self.metadata = MetadataService(bq_table_name=BQ_METADATA_TABLE)
 
     def run(self, start_time: str, end_time: str, log_type = "ALL_TYPES"):
@@ -49,9 +48,9 @@ class ExportService:
         try:
             result = self.client.create_data_export(r)
             id = result.get("dataExportId", "UNKNOWN")
-            state = result.get("dataExportStatus", {}).get("stage", "UNKNOWN")
-            self.metadata.insert(id=id, state=state, data=raw_data)
+            status = result.get("dataExportStatus", {}).get("stage", "UNKNOWN")
+            self.metadata.insert(id=id, status=status, data=raw_data)
             # log success to bq
         except BackstoryClientError as e:
             logger.error(f"exporting data '{r}' resulted in an error: {e}")
-            self.metadata.insert(id="UNKNOWN", state="INTERNAL_ERROR", data=raw_data)
+            self.metadata.insert(id="UNKNOWN", status="INTERNAL_ERROR", data=raw_data)

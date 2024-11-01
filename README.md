@@ -25,6 +25,8 @@ The Cloud Function will require the following environment variables to be set:
 - `SA_FILE` - path to the service account key file that has permissions to access the Chronicle Data Export API
 - `BQ_METADATA_TABLE` - BigQuery table name in the `projectid.dataset.tablename` to store the job status
 
+**Ensure that the service account used to run the Cloud Function has `roles/bigquery.jobUser` permission on the BigQuery dataset/table**
+
 You can deploy it using `gcloud`:
 
 ```
@@ -41,10 +43,10 @@ gcloud functions deploy chronicle_export \
 As the Chronicle Data Export API is asynchronous job status is tracked in BigQuery. For that purpose a table needs to be created
 ```
 # create dataset
-bq mk chronicle_export
+bq --project_id GCP_PROJECT mk chronicle_export
 
 # create table
-bq mk -t --description "Status tracking for Chronicle Data Export jobs" \
+bq --project_id GCP_PROJECT mk -t --description "Status tracking for Chronicle Data Export jobs" \
   chronicle_export.job_status \
-  id:STRING,event_time:TIMESTAMP,state:STRING,data:JSON
+  id:STRING,event_time:TIMESTAMP,status:STRING,data:JSON
 ```

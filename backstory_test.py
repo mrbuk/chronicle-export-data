@@ -57,6 +57,37 @@ class BackstoryClientDummy:
             "dataExportStatus": {"stage": "IN_QUEUE"}
         }
 
+    def get_data_export(self, id: str) -> dict:
+        if id == "59f938fd-8fa5-4948-8c6a-d3e70d1a9b4e":
+            return {
+                "dataExportId": id,
+                "startTime": "2020-03-01T00:00:00Z",
+                "endTime": "2020-03-15T00:00:00Z",
+                "logType": "ALL_TYPES",
+                "gcsBucket": "projects/chronicle-test/buckets/dataexport-test-bucket",
+                "dataExportStatus": {"stage": "COMPLETED"}
+            }
+        elif id == "59f938fd-8fa5-4948-8c6a-d3e70d1a9b4f":
+            return {
+                "dataExportId": id,
+                "startTime": "2020-03-01T00:00:00Z",
+                "endTime": "2020-03-15T00:00:00Z",
+                "logType": "ALL_TYPES",
+                "gcsBucket": "projects/chronicle-test/buckets/dataexport-test-bucket",
+                "dataExportStatus": {"stage": "ERROR"}
+            }
+        elif id == "59f938fd-8fa5-4948-8c6a-d3e70d1a9b4a":
+            return {
+                "dataExportId": id,
+                "startTime": "2020-03-01T00:00:00Z",
+                "endTime": "2020-03-15T00:00:00Z",
+                "logType": "ALL_TYPES",
+                "gcsBucket": "projects/chronicle-test/buckets/dataexport-test-bucket",
+                "dataExportStatus": {"stage": "IN_QUEUE"}
+            }
+        else:
+            raise ValueError("id does not exist")
+
 class TestBackstory(unittest.TestCase):
     def test_simple_date(self):
         r = CreateDataExportRequest(

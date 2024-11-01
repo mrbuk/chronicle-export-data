@@ -37,4 +37,5 @@ def status_update_http(request: flask.Request) -> flask.typing.ResponseReturnVal
         StatusUpdateService().run()
     except Exception as e:
         return "internal-error", 500
-    return "not-implemented", 501
+
+    return "success", 200
