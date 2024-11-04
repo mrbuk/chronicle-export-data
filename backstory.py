@@ -18,7 +18,7 @@ class CreateDataExportRequest:
     def __init__(self, start_time: datetime, end_time: datetime, log_type: str, gcs_bucket: str):
         self.start_time = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
         self.end_time = end_time.strftime("%Y-%m-%dT%H:%M:%SZ")
-        self.log_type = 'ALL_TYPE' if not log_type else log_type
+        self.log_type = 'ALL_TYPES' if not log_type else log_type
         self.gcs_bucket = gcs_bucket
 
     def toDict(self):
