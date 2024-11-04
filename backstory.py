@@ -21,13 +21,13 @@ class CreateDataExportRequest:
         self.log_type = log_type
         self.gcs_bucket = gcs_bucket
 
-    def toJson(self):
-        return json.dumps({
+    def toDict(self):
+        return {
             "startTime": self.start_time,
             "endTime": self.end_time,
             "logType": self.log_type,
             "gcsBucket": self.gcs_bucket
-        })
+        }
 
 class BackstoryClient:
     SCOPES = ['https://www.googleapis.com/auth/chronicle-backstory']
@@ -43,10 +43,10 @@ class BackstoryClient:
 
     def create_data_export(self, request: CreateDataExportRequest) -> dict:
         url = f"{self.base_url}/v1/tools/dataexport"
-        resp = self.http_session.request("POST", url, json=request.toJson())
+        resp = self.http_session.request("POST", url, json=request.toDict())
         # check status
         if not(resp.status_code >= 200 and resp.status_code <= 299):
-            msg = f"received status code {resp.status_code} from backstory api"
+            msg = f"received status code {resp.status_code} from backstory api. Error: {resp.text}"
             logger.error(msg)
             raise Exception(msg)
 
