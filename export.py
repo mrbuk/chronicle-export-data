@@ -44,7 +44,7 @@ class ExportService:
                 self.export_request(r)
 
     def export_request(self, r):
-        raw_data = json.loads(r.toJson())
+        raw_data = r
         try:
             result = self.client.create_data_export(r)
             id = result.get("dataExportId", "UNKNOWN")
