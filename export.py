@@ -25,12 +25,9 @@ class ExportService:
         # if dates have been provided execute this export without calcuation
         # this is meant to be used for manual invocation e.g. export led to error
         if start_time and end_time:
-            r = json.dumps({
-                "startTime": start_time,
-                "endTime": end_time,
-                "logType": log_type,
-                "gcsBucket": GCS_BUCKET
-            })
+            r = CreateDataExportRequest(
+                    start_time=start_time, end_time=end_time,
+                    gcs_bucket=GCS_BUCKET, log_type = log_type)
             self.export_request(r)
 
         # use DateCalculator() to calculate the date in the past and split
