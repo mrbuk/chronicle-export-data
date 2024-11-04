@@ -58,7 +58,7 @@ class BackstoryClient:
             raise BackstoryClientError(msg)
 
         if o.get("dataExportStatus") is None or o["dataExportStatus"].get("stage") != "IN_QUEUE":
-            msg = f"unexpected state of export job: dataExportStatus={o["dataExportStatus"]}"
+            msg = f"unexpected state of export job: dataExportStatus={o['dataExportStatus']}"
             logger.error(msg)
             raise BackstoryClientError(msg)
 

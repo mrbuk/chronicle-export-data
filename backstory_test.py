@@ -26,7 +26,7 @@ def mocked_request(*args, **kwargs):
         def json(self):
             return self.json_data
 
-    req = json.loads(kwargs["json"])
+    req = kwargs["json"]
     if args[0] == "POST" and args[1] == 'https://eu-backstory.googleapis.com/v1/tools/dataexport' and req["gcsBucket"] == "some-bucket":
         return MockResponse({ "dataExportId": "d828bcec-21d3-4ecd-910e-0a934f0bd074",
           "startTime": "2024-10-30T00:00:00Z",
@@ -113,7 +113,7 @@ class TestBackstory(unittest.TestCase):
             result = client.create_data_export(r)
             self.assertIn(
                 call(
-                    'POST', 'https://eu-backstory.googleapis.com/v1/tools/dataexport', json=r.toJson()
+                    'POST', 'https://eu-backstory.googleapis.com/v1/tools/dataexport', json=r.toDict()
                 ),
                 request_mock.call_args_list)
             self.assertEqual(result["dataExportId"], "d828bcec-21d3-4ecd-910e-0a934f0bd074")
@@ -134,7 +134,7 @@ class TestBackstory(unittest.TestCase):
 
             self.assertIn(
                 call(
-                    'POST', 'https://eu-backstory.googleapis.com/v1/tools/dataexport', json=r.toJson()
+                    'POST', 'https://eu-backstory.googleapis.com/v1/tools/dataexport', json=r.toDict()
                 ),
                 request_mock.call_args_list)
 
